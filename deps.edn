@@ -1,9 +1,15 @@
 {:paths ["src"]
  ;; org-ietf-deflate supplies CRC-32, which .xz uses for every structural field
  ;; (stream flags, block header, index, footer). One CRC-32 in the workspace.
- :deps {io.github.kotoba-lang/org-ietf-deflate {:git/sha "430d754313e9082114ec00554e0b6770d9d318c5"}}
+ :deps {io.github.kotoba-lang/org-ietf-deflate {:git/sha "430d754313e9082114ec00554e0b6770d9d318c5"}
+        ;; org-nist-sha2 supplies the SHA-256 that a `--check=sha256` stream
+        ;; needs. Before it existed the only options were injecting a host hash
+        ;; or refusing the file; a compression library still should not contain a
+        ;; hash implementation, but it can depend on one.
+        io.github.kotoba-lang/org-nist-sha2 {:git/sha "3b4f7e93eff2c438c758383bab440b6f35627e31"}}
  :aliases
- {:local {:override-deps {io.github.kotoba-lang/org-ietf-deflate {:local/root "../org-ietf-deflate"}}}
+ {:local {:override-deps {io.github.kotoba-lang/org-ietf-deflate {:local/root "../org-ietf-deflate"}
+                          io.github.kotoba-lang/org-nist-sha2 {:local/root "../org-nist-sha2"}}}
   :test {:extra-paths ["test"]
          :extra-deps {io.github.cognitect-labs/test-runner
                       {:git/tag "v0.5.1" :git/sha "dfb30dd"}}

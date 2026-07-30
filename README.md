@@ -46,13 +46,19 @@ per-block check are **verified by default**:
 | None | accepted, nothing to verify |
 | CRC-32 | verified (from `org-ietf-deflate`) |
 | CRC-64 | verified — the default `xz` uses; implemented here as 32-bit halves because ClojureScript has no 64-bit integer |
-| SHA-256 | verified when you pass `:sha256`, otherwise **refused by name** |
+| SHA-256 | verified (from `org-nist-sha2`) |
 
-A hash does not belong inside a compression library, so SHA-256 is injected:
+A hash implementation does not belong *inside* a compression library, which is
+why SHA-256 is a dependency rather than code in this repo — and why `:sha256`
+remains an injection point for a caller that already has one it would rather use:
 
 ```clojure
 (xz/decompress f {:sha256 (fn [bytes] ...32 bytes...)})
 ```
+
+Until `org-nist-sha2` existed, a `--check=sha256` stream was **refused by name**:
+the alternatives were injecting a host hash or declining the file, and declining
+was the honest one. That refusal is gone.
 
 Failures are `ex-info` with a `:reason` — `:not-xz`, `:truncated`,
 `:checksum-mismatch`, `:bad-block-header`, `:bad-index`, `:bad-footer`,

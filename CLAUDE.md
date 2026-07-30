@@ -12,8 +12,10 @@ dependency (`org-ietf-deflate`, for CRC-32).
   the reference so the two can be diffed by eye. If you refactor for elegance and
   the oracle tests still pass, you have probably still made the next bug harder
   to find.
-- **Checks are verified by default.** `:verify-check false` exists for salvage.
-  SHA-256 is injected (`:sha256`), never implemented here.
+- **Checks are verified by default**, SHA-256 included (`org-nist-sha2`).
+  `:verify-check false` exists for salvage, and `:sha256` overrides the bundled
+  hash for a caller with its own. **No hash is implemented in this repo** — that
+  is a dependency, not a refusal, since 2026-07-30.
 - **Every failure is an `ex-info` with `:reason`.**
 - **Both runtimes are gated** (`clojure -M:test`, `nbb run-tests.cljs`).
 

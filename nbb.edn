@@ -1,1 +1,1 @@
-{:paths ["src" "test" "../org-ietf-deflate/src"]}
+{:paths ["src" "test" "../org-ietf-deflate/src" "../org-nist-sha2/src"]}

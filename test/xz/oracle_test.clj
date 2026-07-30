@@ -94,16 +94,21 @@ open('f.xz','wb').write(lzma.compress(d, format=lzma.FORMAT_XZ, check=lzma." che
 "))]
               (if (= check "CHECK_SHA256")
                 (do
-                  (testing "refused by name unless a hash is supplied"
-                    (is (= :unsupported-check
-                           (try (xz/decompress comp) nil
-                                (catch Exception e (:reason (ex-data e)))))))
-                  (testing "and verified when one is"
+                  (testing "verified with the bundled SHA-256 (org-nist-sha2)"
+                    ;; this used to be a refusal: there was no portable SHA-256 in
+                    ;; the workspace, so the only options were injecting a host
+                    ;; hash or declining the file
+                    (is (= raw (xz/decompress comp))))
+                  (testing "and the bundled hash agrees with the JVM's"
                     (let [sha (fn [bs]
                                 (vec (map #(bit-and (int %) 0xff)
                                           (.digest (java.security.MessageDigest/getInstance "SHA-256")
                                                    (byte-array (map unchecked-byte bs))))))]
                       (is (= raw (xz/decompress comp {:sha256 sha})))))
+                  (testing "an injected hash that disagrees is caught, not ignored"
+                    (is (= :checksum-mismatch
+                           (try (xz/decompress comp {:sha256 (fn [_] (vec (repeat 32 0)))}) nil
+                                (catch Exception e (:reason (ex-data e)))))))
                   (testing "or skipped explicitly"
                     (is (= raw (xz/decompress comp {:verify-check false})))))
                 (is (= raw (xz/decompress comp))))))

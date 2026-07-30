@@ -6,9 +6,10 @@
    an index and a footer, and every structural field is CRC-32'd separately from
    the data, which itself carries a CRC-32, CRC-64 (the default) or SHA-256
    check. Verifying those is the point of the format, so it happens by default —
-   `:verify-check false` is available for salvage, and SHA-256 needs a function
-   passed in (`:sha256`) because implementing a hash inside a compression
-   library would be the wrong place to put it.
+   including SHA-256, which comes from `org-nist-sha2`. A compression library
+   still should not *contain* a hash implementation, which is why this one is a
+   dependency and why `:sha256` remains an injection point for a caller with its
+   own. `:verify-check false` is available for salvage.
 
    Reading: full LZMA2 support, the Delta filter, multi-stream files and stream
    padding. The BCJ branch-conversion filters (x86, ARM, …) are recognised and
@@ -22,6 +23,7 @@
    *the .xz container* (a 7z folder, a signed artefact, a tool that only accepts
    .xz) get correct bytes today."
   (:require [deflate.core :as deflate]
+            [sha2.core :as sha2]
             [xz.crc64 :as crc64]
             [xz.lzma :as lzma]))
 
@@ -191,13 +193,12 @@
                    (when-not (= (vec stored) got)
                      (throw (ex-info "xz: block CRC-64 mismatch"
                                      {:reason :checksum-mismatch}))))
-          :sha256 (if sha256
-                    (let [got (vec (sha256 data))]
-                      (when-not (= (vec stored) got)
-                        (throw (ex-info "xz: block SHA-256 mismatch"
-                                        {:reason :checksum-mismatch}))))
-                    (throw (ex-info "xz: stream uses a SHA-256 check; pass :sha256"
-                                    {:reason :unsupported-check :check :sha256})))
+          ;; org-nist-sha2 by default; `:sha256` overrides it for a caller that
+          ;; already has one (a native binding, say) and wants it used here too
+          :sha256 (let [got (vec ((or sha256 sha2/sha256) data))]
+                    (when-not (= (vec stored) got)
+                      (throw (ex-info "xz: block SHA-256 mismatch"
+                                      {:reason :checksum-mismatch}))))
           nil)))
     size))
 
@@ -316,7 +317,7 @@
   "Decompress an .xz file (every stream, concatenated) → vector of unsigned bytes.
 
    Options: `:verify-check` (default true), `:max-output`, `:sha256` (a function
-   from bytes to 32 bytes, required only for SHA-256 checks)."
+   from bytes to 32 bytes, overriding the bundled one)."
   ([data] (decompress data nil))
   ([data opts]
    (let [v (vec data)]
