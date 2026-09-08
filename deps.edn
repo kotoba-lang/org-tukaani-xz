@@ -1,7 +1,12 @@
 {:paths ["src"]
  ;; org-ietf-deflate supplies CRC-32, which .xz uses for every structural field
  ;; (stream flags, block header, index, footer). One CRC-32 in the workspace.
- :deps {io.github.kotoba-lang/org-ietf-deflate {:git/sha "430d754313e9082114ec00554e0b6770d9d318c5"}
+ :deps {
+        ;; kotoba.lang.text, not clojure.string. Pinned as an explicit floor:
+        ;; tools.deps takes the NEWEST sha it is shown, so without a floor here
+        ;; this repo silently rides whatever a sibling happens to name.
+        io.github.kotoba-lang/text {:git/sha "73bdb13ae7a3d004b44bca08be03a3191157a38f"}
+       io.github.kotoba-lang/org-ietf-deflate {:git/sha "430d754313e9082114ec00554e0b6770d9d318c5"}
         ;; org-nist-sha2 supplies the SHA-256 that a `--check=sha256` stream
         ;; needs. Before it existed the only options were injecting a host hash
         ;; or refusing the file; a compression library still should not contain a
