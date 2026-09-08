@@ -11,7 +11,7 @@
    Skipped loudly when python3 or xz is missing rather than passing silently."
   (:require [clojure.java.io :as io]
             [clojure.java.shell :as shell]
-            [clojure.string :as str]
+            [kotoba.lang.text :as str]
             [clojure.test :refer [deftest is testing]]
             [xz.core :as xz])
   (:import [java.io File]
