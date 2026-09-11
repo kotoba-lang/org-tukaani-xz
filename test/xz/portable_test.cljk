@@ -1,6 +1,6 @@
 (ns xz.portable-test
   "Runtime-agnostic suite: no shell, no python, no host codec. Runs under
-   `clojure -M:test` and `nbb run-tests.cljs`.
+   `clojure -M:test` and `nbb run-tests.cljk`.
 
    Conformance against liblzma across presets, dictionary sizes, check types,
    filter chains and both container formats lives in `xz.oracle-test` — a

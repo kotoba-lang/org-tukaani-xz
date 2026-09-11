@@ -88,7 +88,7 @@ Failures are `ex-info` with a `:reason` — `:not-xz`, `:truncated`,
 ```sh
 clojure -M:test          # JVM: portable suite + conformance against liblzma and the xz CLI
 clojure -M:local:test    # …against a sibling org-ietf-deflate checkout
-nbb run-tests.cljs       # ClojureScript: the same portable suite
+nbb run-tests.cljk       # ClojureScript: the same portable suite
 clojure -M:lint
 ```
 
