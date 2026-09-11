@@ -17,7 +17,7 @@ dependency (`org-ietf-deflate`, for CRC-32).
   hash for a caller with its own. **No hash is implemented in this repo** — that
   is a dependency, not a refusal, since 2026-07-30.
 - **Every failure is an `ex-info` with `:reason`.**
-- **Both runtimes are gated** (`clojure -M:test`, `nbb run-tests.cljk`).
+- **Both runtimes are gated** (`kbb -M:test`, `kbb --backend sci run-tests.cljk`).
 
 ## Traps
 

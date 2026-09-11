@@ -86,10 +86,10 @@ Failures are `ex-info` with a `:reason` — `:not-xz`, `:truncated`,
 ## Test
 
 ```sh
-clojure -M:test          # JVM: portable suite + conformance against liblzma and the xz CLI
-clojure -M:local:test    # …against a sibling org-ietf-deflate checkout
-nbb run-tests.cljk       # ClojureScript: the same portable suite
-clojure -M:lint
+kbb -M:test          # JVM: portable suite + conformance against liblzma and the xz CLI
+kbb -M:local:test    # …against a sibling org-ietf-deflate checkout
+kbb --backend sci run-tests.cljk       # ClojureScript: the same portable suite
+kbb -M:lint
 ```
 
 The JVM suite generates every fixture with python3's `lzma` (which *is* liblzma)
