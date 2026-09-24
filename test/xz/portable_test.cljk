@@ -9,7 +9,7 @@
   (:require [xz.core :as xz]
             [xz.crc64 :as crc64]
             [xz.lzma :as lzma]
-            #?(:clj  [clojure.test :refer [deftest is testing]]
+            #?(:clj  [kotoba.test :refer [deftest is testing]]
                :cljs [cljs.test :refer [deftest is testing]])))
 
 (defn- char-code [c]
