@@ -1,4 +1,4 @@
-# CLAUDE.md — org-tukaani-xz
+# AGENTS.md — org-tukaani-xz
 
 LZMA/LZMA2 decompression + the .xz and .lzma containers, portable `.cljc`. One
 dependency (`org-ietf-deflate`, for CRC-32).
